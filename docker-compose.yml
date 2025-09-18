@@ -1,0 +1,72 @@
+services:
+  init-keyfile:
+    image: mongo:6.0
+    container_name: init_keyfile
+    command: >
+      sh -c "
+      mkdir -p /etc/mongodb/pki &&
+      if [ ! -f /etc/mongodb/pki/keyfile ]; then
+        echo 'Generating keyfile...';
+        openssl rand -base64 756 > /etc/mongodb/pki/keyfile &&
+        chmod 400 /etc/mongodb/pki/keyfile;
+      else
+        echo 'Keyfile already exists.';
+      fi
+      "
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+    networks:
+      - mongo-cluster
+    restart: "on-failure"
+
+  primary_mongo:
+    container_name: primary_mongo
+    image: mongo:6.0
+    hostname: primary_mongo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "27017:27017"
+    depends_on:
+      - init-keyfile
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+      - ./mongodb-init.sh:/mongodb-init.sh:ro
+      - ./init-data.js:/docker-entrypoint-initdb.d/init-data.js:ro
+      - mongodb_data:/data/db
+    command: ["bash", "/mongodb-init.sh"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    networks:
+      - mongo-cluster
+
+  minio:
+    container_name: minio
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - mongo-cluster
+
+networks:
+  mongo-cluster:
+
+volumes:
+  mongo-keyfile-vol:
+  mongodb_data:
+  minio_data:

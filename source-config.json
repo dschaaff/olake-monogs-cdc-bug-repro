@@ -1,0 +1,9 @@
+{
+  "hosts": [
+    "localhost:27017"
+  ],
+  "database": "olake_mongodb_test",
+  "authdb": "admin",
+  "username": "mongodb",
+  "password": "secure_password123"
+}

@@ -1,0 +1,21 @@
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Starting discover for MongoDB database olake_mongodb_test"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"producing type schema for stream [test_collection]"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Valid selected streams are olake_mongodb_test.test_collection"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[test_parquet_destination]: s3 writer configuration found"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[test_parquet_destination]: no streams selected for clearing, skipping clear operation"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Total expected count for stream olake_mongodb_test.test_collection: 3"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"_id is  ObjectID"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Starting backfill for stream[test_collection] with 1 chunks"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[olake_mongodb_test.test_collection_01K5FGC4HBGVZ9YZSCE2FRMZH6]: created writer for chunk min[68cc8ccad335433c472b925c] and max[%!s(<nil>)] of stream olake_mongodb_test.test_collection"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[olake_mongodb_test.test_collection_01K5FGC4HBGVZ9YZSCE2FRMZH6]: created new partition file[/tmp/mongodb_olake_mongodb_test/test_collection/2025-9-18_22-50-57_01K5FGC4HCRH0CNDYNA9VKB8BG.parquet]"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[olake_mongodb_test.test_collection_01K5FGC4HBGVZ9YZSCE2FRMZH6]: successfully wrote 3 records"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[olake_mongodb_test.test_collection_01K5FGC4HBGVZ9YZSCE2FRMZH6]: Finished writing file [/tmp/mongodb_olake_mongodb_test/test_collection/2025-9-18_22-50-57_01K5FGC4HCRH0CNDYNA9VKB8BG.parquet]."}
+{"level":"debug","time":"2025-09-18T22:50:57Z","message":"Thread[olake_mongodb_test.test_collection_01K5FGC4HBGVZ9YZSCE2FRMZH6]: Deleted file [/tmp/mongodb_olake_mongodb_test/test_collection/2025-9-18_22-50-57_01K5FGC4HCRH0CNDYNA9VKB8BG.parquet], reason (uploaded to S3)."}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[olake_mongodb_test.test_collection_01K5FGC4HBGVZ9YZSCE2FRMZH6]: successfully uploaded file to S3: s3://olake-data/mongodb_olake_mongodb_test/test_collection/2025-9-18_22-50-57_01K5FGC4HCRH0CNDYNA9VKB8BG.parquet"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"finished chunk min[68cc8ccad335433c472b925c] and max[<nil>] of stream olake_mongodb_test.test_collection"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Thread[olake_mongodb_test.test_collection_01K5FGC4HFZ2G0VCNCGZ4CQJKA]: created cdc writer for stream olake_mongodb_test.test_collection"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Starting CDC sync for stream[olake_mongodb_test.test_collection] with resume token[8268CC8CCB000000032B0229296E04]"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Total records read: 3"}
+{"level":"info","time":"2025-09-18T22:50:57Z","message":"Sync completed, wait 5 seconds cleanup in progress..."}

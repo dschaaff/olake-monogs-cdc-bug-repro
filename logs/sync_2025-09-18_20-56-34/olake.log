@@ -1,0 +1,6 @@
+{"level":"info","time":"2025-09-18T20:56:34Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
+{"level":"info","time":"2025-09-18T20:56:34Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
+{"level":"info","time":"2025-09-18T20:56:34Z","message":"Starting discover for MongoDB database olake_mongodb_test"}
+{"level":"info","time":"2025-09-18T20:56:34Z","message":"producing type schema for stream [test_collection]"}
+{"level":"warn","time":"2025-09-18T20:56:34Z","message":"Skipping; Configured Stream testdb.orders not found in source"}
+{"level":"fatal","time":"2025-09-18T20:56:34Z","message":"no valid streams found in catalog"}

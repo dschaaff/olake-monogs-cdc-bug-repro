@@ -1,0 +1,5 @@
+{"level":"info","time":"2025-09-18T21:00:52Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
+{"level":"info","time":"2025-09-18T21:00:52Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
+{"level":"info","time":"2025-09-18T21:00:52Z","message":"Starting discover for MongoDB database olake_mongodb_test"}
+{"level":"info","time":"2025-09-18T21:00:52Z","message":"producing type schema for stream [test_collection]"}
+{"level":"fatal","time":"2025-09-18T21:00:52Z","message":"no valid streams found in catalog"}

@@ -1,0 +1,3 @@
+{"level":"info","time":"2025-09-18T20:55:52Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
+{"level":"info","time":"2025-09-18T20:55:52Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
+{"level":"fatal","time":"2025-09-18T20:55:52Z","message":"failed to connect to MongoDB: connection() error occurred during connection handshake: auth error: sasl conversation error: unable to authenticate using mechanism \"SCRAM-SHA-1\": (AuthenticationFailed) Authentication failed."}
