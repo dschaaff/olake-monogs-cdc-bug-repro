@@ -49,7 +49,7 @@ insert_document() {
     local statuses=("pending" "completed" "shipped" "cancelled")
     local random_status="${statuses[$((RANDOM % ${#statuses[@]}))]}"
 
-    docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval "
+    docker exec mongos mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval "
 db.test_collection.insertOne({
     _id: ObjectId(),
     orderID: \"$random_order_id\",
@@ -58,13 +58,6 @@ db.test_collection.insertOne({
     status: \"$random_status\",
     createdAt: new Date()
 });
-print(\"Inserted new document with orderID: $random_order_id\");
-db.test_collection_two.insertOne({
-    _id: ObjectId(),
-    key: \"$random_order_id\",
-    createdAt: new Date()
-});
-print(\"Inserted new document in collection 2 with orderID: $random_order_id\");
 "
 }
 

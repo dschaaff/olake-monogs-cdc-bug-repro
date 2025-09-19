@@ -30,7 +30,7 @@ count_output_documents() {
 
 # Function to check if the new document exists in MongoDB
 check_new_document_exists() {
-    docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --quiet --eval 'print(db.test_collection.countDocuments({orderID: "ORD-004-NEW"}));' 2>/dev/null || echo "0"
+    docker exec mongos mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --quiet --eval 'print(db.test_collection.countDocuments({orderID: "ORD-004-NEW"}));' 2>/dev/null || echo "0"
 }
 
 echo -e "${YELLOW}Step 1: Run olake discover to generate catalog${NC}"
@@ -63,7 +63,7 @@ if [ "$initial_count" -ne 3 ]; then
 fi
 sleep 15
 echo -e "${YELLOW}Step 3: Insert a new document into MongoDB${NC}"
-docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval '
+docker exec mongos mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval '
 db.test_collection.insertOne({
     _id: ObjectId(),
     orderID: "ORD-004-NEW",

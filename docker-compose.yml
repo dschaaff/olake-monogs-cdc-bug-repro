@@ -8,9 +8,12 @@ services:
       if [ ! -f /etc/mongodb/pki/keyfile ]; then
         echo 'Generating keyfile...';
         openssl rand -base64 756 > /etc/mongodb/pki/keyfile &&
+        chown 999:999 /etc/mongodb/pki/keyfile &&
         chmod 400 /etc/mongodb/pki/keyfile;
       else
         echo 'Keyfile already exists.';
+        chown 999:999 /etc/mongodb/pki/keyfile &&
+        chmod 400 /etc/mongodb/pki/keyfile;
       fi
       "
     volumes:
@@ -19,22 +22,106 @@ services:
       - mongo-cluster
     restart: "on-failure"
 
-  primary_mongo:
-    container_name: primary_mongo
+  # Config Server Replica Set
+  config1:
+    container_name: config1
     image: mongo:6.0
-    hostname: primary_mongo
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - "27017:27017"
+    hostname: config1
+    command: mongod --configsvr --replSet configrs --port 27019 --bind_ip_all
     depends_on:
       - init-keyfile
     volumes:
       - mongo-keyfile-vol:/etc/mongodb/pki
-      - ./mongodb-init.sh:/mongodb-init.sh:ro
-      - ./init-data.js:/docker-entrypoint-initdb.d/init-data.js:ro
-      - mongodb_data:/data/db
-    command: ["bash", "/mongodb-init.sh"]
+      - config1_data:/data/db
+    networks:
+      - mongo-cluster
+
+  config2:
+    container_name: config2
+    image: mongo:6.0
+    hostname: config2
+    command: mongod --configsvr --replSet configrs --port 27019 --bind_ip_all
+    depends_on:
+      - init-keyfile
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+      - config2_data:/data/db
+    networks:
+      - mongo-cluster
+
+  config3:
+    container_name: config3
+    image: mongo:6.0
+    hostname: config3
+    command: mongod --configsvr --replSet configrs --port 27019 --bind_ip_all
+    depends_on:
+      - init-keyfile
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+      - config3_data:/data/db
+    networks:
+      - mongo-cluster
+
+  # Single Shard Replica Set
+  shard1_1:
+    container_name: shard1_1
+    image: mongo:6.0
+    hostname: shard1_1
+    command: mongod --shardsvr --replSet shard1rs --port 27018 --bind_ip_all
+    depends_on:
+      - init-keyfile
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+      - shard1_1_data:/data/db
+    networks:
+      - mongo-cluster
+
+  shard1_2:
+    container_name: shard1_2
+    image: mongo:6.0
+    hostname: shard1_2
+    command: mongod --shardsvr --replSet shard1rs --port 27018 --bind_ip_all
+    depends_on:
+      - init-keyfile
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+      - shard1_2_data:/data/db
+    networks:
+      - mongo-cluster
+
+  shard1_3:
+    container_name: shard1_3
+    image: mongo:6.0
+    hostname: shard1_3
+    command: mongod --shardsvr --replSet shard1rs --port 27018 --bind_ip_all
+    depends_on:
+      - init-keyfile
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+      - shard1_3_data:/data/db
+    networks:
+      - mongo-cluster
+
+  # Mongos Router
+  mongos:
+    container_name: mongos
+    image: mongo:6.0
+    hostname: mongos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "27017:27017"
+    command: ["bash", "/mongodb-init-sharded.sh"]
+    depends_on:
+      - config1
+      - config2
+      - config3
+      - shard1_1
+      - shard1_2
+      - shard1_3
+    volumes:
+      - mongo-keyfile-vol:/etc/mongodb/pki
+      - ./mongodb-init-sharded.sh:/mongodb-init-sharded.sh:ro
     healthcheck:
       test: ["CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -68,5 +155,10 @@ networks:
 
 volumes:
   mongo-keyfile-vol:
-  mongodb_data:
+  config1_data:
+  config2_data:
+  config3_data:
+  shard1_1_data:
+  shard1_2_data:
+  shard1_3_data:
   minio_data:
