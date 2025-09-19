@@ -1,1 +1,1 @@
-{}
+{"type":"STREAM","streams":[{"stream":"test_collection","namespace":"olake_mongodb_test","sync_mode":"","state":{"_data":"8268CDB04D000000022B0229296E04","chunks":[]}},{"stream":"test_collection_two","namespace":"olake_mongodb_test","sync_mode":"","state":{"_data":"8268CDB04D000000022B022C0100296E5A100488995EB461444082952A46F79676E72546645F6964006468CDB04DE397CF9E9D2B925D0004","chunks":[]}}]}

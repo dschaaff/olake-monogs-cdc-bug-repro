@@ -17,7 +17,7 @@ echo -e "${BLUE}=== MongoDB CDC Resume Token Bug Reproduction ===${NC}"
 # Clean up previous runs
 echo -e "${YELLOW}Cleaning up previous runs...${NC}"
 rm -rf output/ state.json stats.json
-echo "{}" > state.json
+echo "{}" >state.json
 
 # Function to count documents in output
 count_output_documents() {
@@ -28,97 +28,60 @@ count_output_documents() {
     fi
 }
 
-# Function to check if the new document exists in MongoDB
-check_new_document_exists() {
-    docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --quiet --eval 'print(db.test_collection.countDocuments({orderID: "ORD-004-NEW"}));' 2>/dev/null || echo "0"
+run_olake_sync() {
+    docker run --rm \
+        --network host \
+        -v "$(pwd)":/workspace \
+        olakego/source-mongodb:v0.2.3 \
+        sync \
+        --config /workspace/source-config.json \
+        --destination /workspace/destination-config.json \
+        --catalog /workspace/discovered-catalog.json \
+        --state /workspace/state.json
+
+}
+
+insert_document() {
+    local random_order_id="ORD-$(openssl rand -hex 3 | tr '[:lower:]' '[:upper:]')"
+    local customer_names=("Alice Smith" "Bob Johnson" "Charlie Davis" "Diana Miller" "Eve Wilson")
+    local random_customer_name="${customer_names[$((RANDOM % ${#customer_names[@]}))]}"
+    local random_amount=$(awk -v min=50 -v max=500 'BEGIN{srand(); print min+rand()*(max-min)}')
+    local statuses=("pending" "completed" "shipped" "cancelled")
+    local random_status="${statuses[$((RANDOM % ${#statuses[@]}))]}"
+
+    docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval "
+db.test_collection.insertOne({
+    _id: ObjectId(),
+    orderID: \"$random_order_id\",
+    customerName: \"$random_customer_name\",
+    amount: $random_amount,
+    status: \"$random_status\",
+    createdAt: new Date()
+});
+print(\"Inserted new document with orderID: $random_order_id\");
+db.test_collection_two.insertOne({
+    _id: ObjectId(),
+    key: \"$random_order_id\",
+    createdAt: new Date()
+});
+print(\"Inserted new document in collection 2 with orderID: $random_order_id\");
+"
 }
 
 echo -e "${YELLOW}Step 1: Run olake discover to generate catalog${NC}"
-docker run --rm \
-    --network host \
-    -v "$(pwd)":/workspace \
-    olakego/source-mongodb:v0.2.3 \
-    discover \
-    --config /workspace/source-config.json
+# docker run --rm \
+#     --network host \
+#     -v "$(pwd)":/workspace \
+#     olakego/source-mongodb:v0.2.3 \
+#     discover \
+#     --config /workspace/source-config.json
 
 echo -e "${GREEN}Discovery complete. Using discovered catalog.${NC}"
 
-echo -e "${YELLOW}Step 2: Run initial olake sync (should sync 3 initial documents)${NC}"
-docker run --rm \
-    --network host \
-    -v "$(pwd)":/workspace \
-    olakego/source-mongodb:v0.2.3 \
-    sync \
-    --config /workspace/source-config.json \
-    --destination /workspace/destination-config.json \
-    --catalog /workspace/discovered-catalog.json \
-    --state /workspace/state.json
+echo -e "${YELLOW}Step 2: Run initial olake sync${NC}"
 
-echo -e "${YELLOW}Step 3: Insert a new document into MongoDB${NC}"
-docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval '
-db.test_collection.insertOne({
-    _id: ObjectId(),
-    orderID: "ORD-004-NEW",
-    customerName: "Alice Brown",
-    amount: 150.00,
-    status: "pending",
-    createdAt: new Date()
-});
-print("Inserted new document with orderID: ORD-004-NEW");
-'
-
-echo -e "${YELLOW}Step 4: Run olake sync again (should pick up the new document)${NC}"
-docker run --rm \
-    --network host \
-    -v "$(pwd)":/workspace \
-    olakego/source-mongodb:v0.2.3 \
-    sync \
-    --config /workspace/source-config.json \
-    --destination /workspace/destination-config.json \
-    --catalog /workspace/discovered-catalog.json
-
-echo -e "${YELLOW}Step 3: Insert a new document into MongoDB${NC}"
-docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval '
-db.test_collection.insertOne({
-    _id: ObjectId(),
-    orderID: "ORD-005-NEW",
-    customerName: "Alice Brown",
-    amount: 150.00,
-    status: "pending",
-    createdAt: new Date()
-});
-print("Inserted new document with orderID: ORD-004-NEW");
-'
-
-echo -e "${YELLOW}Step 4: Run olake sync again (should pick up the new document)${NC}"
-docker run --rm \
-    --network host \
-    -v "$(pwd)":/workspace \
-    olakego/source-mongodb:v0.2.3 \
-    sync \
-    --config /workspace/source-config.json \
-    --destination /workspace/destination-config.json \
-    --catalog /workspace/discovered-catalog.json
-
-echo -e "${YELLOW}Step 3: Insert a new document into MongoDB${NC}"
-docker exec primary_mongo mongosh --username mongodb --password secure_password123 --authenticationDatabase admin olake_mongodb_test --eval '
-db.test_collection.insertOne({
-    _id: ObjectId(),
-    orderID: "ORD-006-NEW",
-    customerName: "Alice Brown",
-    amount: 150.00,
-    status: "pending",
-    createdAt: new Date()
-});
-print("Inserted new document with orderID: ORD-006-NEW");
-'
-
-echo -e "${YELLOW}Step 4: Run olake sync again (should pick up the new document)${NC}"
-docker run --rm \
-    --network host \
-    -v "$(pwd)":/workspace \
-    olakego/source-mongodb:v0.2.3 \
-    sync \
-    --config /workspace/source-config.json \
-    --destination /workspace/destination-config.json \
-    --catalog /workspace/discovered-catalog.json
+while true; do
+    echo -e "${YELLOW}Insert a new document into MongoDB${NC}"
+    insert_document
+    run_olake_sync
+done

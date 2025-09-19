@@ -5,6 +5,11 @@
         "partition_regex": "",
         "stream_name": "test_collection",
         "normalization": false
+      },
+      {
+        "partition_regex": "",
+        "stream_name": "test_collection_two",
+        "normalization": false
       }
     ]
   },
@@ -55,7 +60,58 @@
           "_id"
         ],
         "available_cursor_fields": [],
-        "sync_mode": "strict_cdc",
+        "sync_mode": "cdc",
+        "destination_database": "mongodb:olake_mongodb_test",
+        "destination_table": "test_collection"
+      }
+    },
+    {
+      "stream": {
+        "name": "test_collection_two",
+        "namespace": "olake_mongodb_test",
+        "type_schema": {
+          "properties": {
+            "_cdc_timestamp": {
+              "type": [
+                "timestamp_micro",
+                "null"
+              ],
+              "destination_column_name": "_cdc_timestamp"
+            },
+            "_olake_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "destination_column_name": "_olake_id"
+            },
+            "_olake_timestamp": {
+              "type": [
+                "timestamp_micro",
+                "null"
+              ],
+              "destination_column_name": "_olake_timestamp"
+            },
+            "_op_type": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "destination_column_name": "_op_type"
+            }
+          }
+        },
+        "supported_sync_modes": [
+          "full_refresh",
+          "incremental",
+          "cdc",
+          "strict_cdc"
+        ],
+        "source_defined_primary_key": [
+          "_id"
+        ],
+        "available_cursor_fields": [],
+        "sync_mode": "cdc",
         "destination_database": "mongodb:olake_mongodb_test",
         "destination_table": "test_collection"
       }

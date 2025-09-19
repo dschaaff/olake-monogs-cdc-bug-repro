@@ -72,7 +72,35 @@ mongosh --port 27017 --eval "
         }
     ]);
 
-    print('Inserted 3 initial documents into test_collection');
+    db.createCollection('test_collection_two');
+
+    db.test_collection_two.insertMany([
+        {
+            _id: ObjectId(),
+            orderID: 'ORD-001',
+            customerName: 'John Doe',
+            amount: 100.50,
+            status: 'completed',
+            createdAt: new Date()
+        },
+        {
+            _id: ObjectId(),
+            orderID: 'ORD-002',
+            customerName: 'Jane Smith',
+            amount: 250.75,
+            status: 'pending',
+            createdAt: new Date()
+        },
+        {
+            _id: ObjectId(),
+            orderID: 'ORD-003',
+            customerName: 'Bob Johnson',
+            amount: 75.25,
+            status: 'completed',
+            createdAt: new Date()
+        }
+    ]);
+    print('Inserted 3 initial documents into test_collection_two');
 
     db = db.getSiblingDB('admin');
 
@@ -118,3 +146,4 @@ fi
 
 echo "Starting MongoDB with authentication..."
 exec mongod --replSet rs0 --bind_ip_all --port 27017 --keyFile /etc/mongodb/pki/keyfile
+
