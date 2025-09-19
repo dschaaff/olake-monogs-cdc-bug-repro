@@ -1,3 +1,0 @@
-{"level":"info","time":"2025-09-18T22:36:41Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
-{"level":"info","time":"2025-09-18T22:36:41Z","message":"Starting discover for MongoDB database test_collection"}
-{"level":"fatal","time":"2025-09-18T22:36:41Z","message":"failed to get stream names: (Unauthorized) not authorized on test_collection to execute command { listCollections: 1, filter: {}, cursor: {}, lsid: { id: UUID(\"497bf29f-9c3f-4ce1-b72f-4d1e0367138c\") }, $clusterTime: { clusterTime: Timestamp(1758234991, 1), signature: { hash: BinData(0, 51993E44F18843A77F2A7ACE9760CA918364F5B3), keyId: 7551561265336811526 } }, $db: \"test_collection\" }"}

@@ -1,2 +1,0 @@
-{"level":"info","time":"2025-09-18T23:07:47Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
-{"level":"fatal","time":"2025-09-18T23:07:47Z","message":"failed to connect to MongoDB: connection() error occurred during connection handshake: auth error: sasl conversation error: unable to authenticate using mechanism \"SCRAM-SHA-1\": (AuthenticationFailed) Authentication failed."}

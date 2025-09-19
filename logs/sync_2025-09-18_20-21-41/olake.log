@@ -1,2 +1,0 @@
-{"level":"info","time":"2025-09-18T20:21:41Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
-{"level":"fatal","time":"2025-09-18T20:21:41Z","message":"error parsing uri: must have at least 1 host"}

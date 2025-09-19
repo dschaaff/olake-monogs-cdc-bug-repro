@@ -1,3 +1,0 @@
-{"level":"info","time":"2025-09-18T20:27:02Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
-{"level":"info","time":"2025-09-18T20:27:02Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
-{"level":"fatal","time":"2025-09-18T20:27:02Z","message":"error validating uri: username required if URI contains user info"}

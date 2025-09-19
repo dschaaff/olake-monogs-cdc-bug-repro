@@ -1,6 +1,0 @@
-{"level":"info","time":"2025-09-18T21:18:49Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
-{"level":"info","time":"2025-09-18T21:18:49Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
-{"level":"info","time":"2025-09-18T21:18:49Z","message":"Starting discover for MongoDB database olake_mongodb_test"}
-{"level":"info","time":"2025-09-18T21:18:49Z","message":"producing type schema for stream [test_collection]"}
-{"level":"info","time":"2025-09-18T21:18:49Z","message":"Valid selected streams are olake_mongodb_test.test_collection"}
-{"level":"fatal","time":"2025-09-18T21:18:49Z","message":"invalid destination type has been passed [local_file]"}

@@ -1,3 +1,0 @@
-{"level":"info","time":"2025-09-18T20:32:30Z","message":"Running sync with state: {\"type\":\"STREAM\"}"}
-{"level":"info","time":"2025-09-18T20:32:30Z","message":"setting max threads to default[%d]%!(EXTRA int=3)"}
-{"level":"fatal","time":"2025-09-18T20:33:00Z","message":"failed to connect to MongoDB: server selection error: server selection timeout, current topology: { Type: ReplicaSetNoPrimary, Servers: [{ Addr: mongodb:27017, Type: Unknown, Last error: dial tcp: lookup mongodb on 192.168.5.2:53: no such host }, ] }"}
