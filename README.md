@@ -4,7 +4,7 @@ This reproduction demonstrates a bug in olake's MongoDB CDC implementation where
 
 ## Bug Description
 
-**Issue**: MongoDB CDC fails to sync documents inserted between olake runs, even though the resume token is being saved and loaded correctly.
+**Issue**: MongoDB CDC fails to detect document changes when connecting through mongos routing due to non-blocking `TryNext()` behavior in the MongoDB Go driver. The change stream opens successfully and resume tokens are handled correctly, but `cursor.TryNext()` returns `false` immediately even when events exist, causing the CDC process to miss all document insertions/updates.
 
 ## Environment
 
