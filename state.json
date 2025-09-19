@@ -1,1 +1,1 @@
-{"type":"STREAM","streams":[{"stream":"test_collection","namespace":"olake_mongodb_test","sync_mode":"","state":{"_data":"8268CDE402000000032B0229296E04","chunks":[]}},{"stream":"test_collection_two","namespace":"olake_mongodb_test","sync_mode":"","state":{"_data":"8268CDE402000000032B0229296E04","chunks":[]}}]}
+{}
