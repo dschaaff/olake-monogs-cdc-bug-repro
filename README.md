@@ -6,8 +6,6 @@ This reproduction demonstrates a bug in olake's MongoDB CDC implementation where
 
 **Issue**: MongoDB CDC fails to sync documents inserted between olake runs, even though the resume token is being saved and loaded correctly.
 
-**Root Cause**: The resume token is being extracted as a string and wrapped incorrectly when passed to MongoDB's `SetResumeAfter()`. MongoDB expects the complete resume token object in its original BSON format.
-
 ## Environment
 
 ## Prerequisites
